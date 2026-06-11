@@ -52,4 +52,11 @@ export default class DrilldownPersistence {
     this.#cookieStorage.add(this.#key, levelId);
     this.#cookieStorage.store();
   }
+
+  /**
+      * @returns void
+      */
+  reset() {
+    this.store(0);
+  }
 }

@@ -133,6 +133,21 @@ describe('Drilldown', () => {
   it('factory has public methods', () => {
     const f = buildFactory(buildDocument());
     strict.equal(f.init instanceof Function, true);
+    strict.equal(f.resetInactive instanceof Function, true);
+  });
+  it('persistence can reset to root level', () => {
+    const storage = {
+      items: { level_id: '2' },
+      add(key, value) {
+        this.items[key] = value;
+      },
+      store() {}
+    };
+    const persistence = new DrilldownPersistence(storage);
+
+    persistence.reset();
+
+    strict.equal(persistence.read(), 0);
   });
   it.skip('dom is correct after init', () => {
     const doc = buildDocument();

@@ -26,6 +26,11 @@ export default class DrilldownFactory {
   #instances = [];
 
   /**
+   * @type {Array<string, Array<string>>}
+   */
+  #instancesByPersistenceId = [];
+
+  /**
    * @type {DOMDocument}
    */
   #document;
@@ -82,5 +87,39 @@ export default class DrilldownFactory {
       new DrilldownMapping(this.#document, this.#resizeObserver, drilldownId),
       backSignal,
     );
+
+    if (persistanceId !== null) {
+      this.#instancesByPersistenceId[persistanceId] = this.#instancesByPersistenceId[persistanceId] || [];
+      this.#instancesByPersistenceId[persistanceId].push(drilldownId);
+    }
+  }
+
+  /**
+   * Reset persisted drilldown levels outside the explicitly active mainbar path.
+   *
+   * @param {?string} activeEntryId
+   * @return {void}
+   */
+  resetInactive(activeEntryId) {
+    Object.keys(this.#instancesByPersistenceId).forEach(
+      (persistenceId) => {
+        if (this.#isActivePath(persistenceId, activeEntryId)) {
+          return;
+        }
+        this.#instancesByPersistenceId[persistenceId].forEach(
+          (drilldownId) => this.#instances[drilldownId].reset(),
+        );
+      },
+    );
+  }
+
+  /**
+   * @param {string} persistenceId
+   * @param {?string} activeEntryId
+   * @return {boolean}
+   */
+  #isActivePath(persistenceId, activeEntryId) {
+    return activeEntryId !== null
+      && (activeEntryId === persistenceId || activeEntryId.startsWith(`${persistenceId}:`));
   }
 }

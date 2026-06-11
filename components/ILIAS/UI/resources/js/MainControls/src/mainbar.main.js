@@ -194,7 +194,8 @@ var mainbar = function() {
     init_desktop = function(initially_active) {
         var mb = il.UI.maincontrols.mainbar,
             cookie_state = mb.persistence.read(),
-            init_state = mb.model.getState();
+            init_state = mb.model.getState(),
+            active_entry_id = null;
         /**
          * apply cookie-state;
          * tools appear and disappear by context and
@@ -231,10 +232,13 @@ var mainbar = function() {
             if(initially_active === '_none') {
                 mb.model.actions.disengageAll();
             } else if(init_state.entries[mappings[initially_active]]) {
+                active_entry_id = mappings[initially_active];
                 mb.model.actions.engageEntry(mappings[initially_active]);
             } else if(init_state.tools[mappings[initially_active]]) {
+                active_entry_id = mappings[initially_active];
                 mb.model.actions.engageTool(mappings[initially_active]);
             }
+            il.UI.menu?.drilldown?.resetInactive(active_entry_id);
         }
 
         /**

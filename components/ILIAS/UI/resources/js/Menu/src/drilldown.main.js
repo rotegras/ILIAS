@@ -65,8 +65,16 @@ export default class Drilldown {
   }
 
   /**
-   *
-   * @param {integer} levelId
+    * @returns {void}
+    */
+  reset() {
+    this.#persistence.reset();
+    this.#engageLevel('0');
+  }
+
+  /**
+    *
+    * @param {integer} levelId
    * @returns {void}
    */
   #engageLevel(levelId) {
