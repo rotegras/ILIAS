@@ -541,7 +541,12 @@ var notificationItemObject = function($item, $, counterFactory){
 	 * @returns jQuery Object of Meta Bar
 	 */
 	var getMetaBarOfItemIfIsInOne = function(){
-		return $item.parents('.il-maincontrols-metabar');
+		var $meta_bar = $item.parents('.il-maincontrols-metabar');
+		// Items rendered within the Hamburger (small screens) belong to the Meta Bar of the page.
+		if (!$meta_bar.length && $item.parents('.il-hamburger').length) {
+			$meta_bar = $('.il-maincontrols-metabar').first();
+		}
+		return $meta_bar;
 	}
 
 	/**

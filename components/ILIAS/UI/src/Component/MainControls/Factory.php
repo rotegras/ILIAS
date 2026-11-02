@@ -228,6 +228,72 @@ interface Factory
      */
     public function mainBar(): MainBar;
 
+    /**
+     * ---
+     * description:
+     *   purpose: >
+     *     The Hamburger is the navigation of the Standard Page on small screens.
+     *     It replaces the Main Bar and the Meta Bar on small screens, providing
+     *     access to their entries in a single, vertically arranged menu that can
+     *     be opened and closed with one button in the header of the page.
+     *
+     *   composition: >
+     *     The Hamburger consists of a toggle Button bearing the Menu Glyph and a
+     *     panel containing the entries of the Meta Bar and the Main Bar.
+     *     Bulky Buttons and Bulky Links are rendered as plain menu entries.
+     *     Slates (including Tools) are rendered as expandable sections: Combined and
+     *     Notification Slates list their entries, nested Slates are rendered as nested
+     *     sections, the contents of all other Slates (e.g. Legacy, Drilldown) are
+     *     rendered within the section. Slates that load their contents asynchronously
+     *     load them into the section when it is expanded the first time.
+     *     Counters of the Meta Bar entries (e.g. for notifications) are shown on
+     *     the respective entries and, summed up, on the toggle Button.
+     *
+     *   effect: >
+     *     Clicking the toggle Button opens or closes the panel.
+     *     Clicking the header of a section expands or collapses its entries;
+     *     there is only one expanded section per level at a time.
+     *     Expanding a section has the same effect as engaging the respective Slate,
+     *     e.g. notifications are marked as seen.
+     *     If a Slate of the Main Bar is engaged by other means (e.g. a Tool by the help),
+     *     it is shown with a back Button, which closes it and reopens the panel.
+     *
+     *   rivals:
+     *     Main Bar: >
+     *       The Main Bar is the navigation on large screens. The Hamburger presents
+     *       the very same entries on small screens.
+     *     Meta Bar: >
+     *       The Meta Bar holds prompts and important controls on large screens. The
+     *       Hamburger presents the very same entries on small screens.
+     *
+     * context:
+     *   - The Hamburger is used in the Standard Page.
+     *
+     * rules:
+     *   usage:
+     *     1: The Hamburger is unique for the page - there MUST be at most one.
+     *     2: >
+     *       The Hamburger MUST be built from the Main Bar (and, if present, the
+     *       Meta Bar) of the page; it MUST NOT have entries of its own.
+     *   responsiveness:
+     *     1: The Hamburger MUST only be visible on small screens.
+     *     2: >
+     *       On small screens, the entries of the Main Bar and the Meta Bar MUST NOT
+     *       be shown outside the Hamburger.
+     *   accessibility:
+     *     1: The panel of the Hamburger MUST be a nav element with an aria-label.
+     *     2: >
+     *       The toggle Button MUST bear the "aria-expanded" and "aria-controls"
+     *       attributes.
+     *     3: >
+     *       Headers of sections MUST bear the "aria-expanded" and "aria-controls"
+     *       attributes.
+     *     4: Pressing Escape MUST close the panel and move the focus to the toggle Button.
+     * ----
+     * @return  \ILIAS\UI\Component\MainControls\Hamburger
+     */
+    public function hamburger(MainBar $main_bar, ?MetaBar $meta_bar = null): Hamburger;
+
 
     /**
      * ---

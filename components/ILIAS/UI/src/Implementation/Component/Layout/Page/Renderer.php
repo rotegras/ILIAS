@@ -71,6 +71,9 @@ class Renderer extends AbstractComponentRenderer
                 $tpl->touchBlock('slates_engaged');
             }
         }
+        if ($component->hasHamburger()) {
+            $tpl->setVariable('HAMBURGER', $default_renderer->render($component->getHamburger()));
+        }
         if ($component->hasModeInfo()) {
             $tpl->setVariable('MODEINFO', $default_renderer->render($component->getModeInfo()));
         }

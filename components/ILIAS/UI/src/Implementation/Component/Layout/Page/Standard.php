@@ -24,6 +24,7 @@ use ILIAS\UI\Component\Breadcrumbs\Breadcrumbs;
 use ILIAS\UI\Component\Image\Image;
 use ILIAS\UI\Component\Layout\Page;
 use ILIAS\UI\Component\MainControls\Footer;
+use ILIAS\UI\Component\MainControls\Hamburger;
 use ILIAS\UI\Component\MainControls\MainBar;
 use ILIAS\UI\Component\MainControls\MetaBar;
 use ILIAS\UI\Component\MainControls\ModeInfo;
@@ -58,6 +59,7 @@ class Standard implements Page\Standard
     private bool $with_headers = true;
     private bool $ui_demo = false;
     protected array $system_infos = [];
+    protected ?Hamburger $hamburger = null;
     protected string $text_direction = "ltr";
     /**
      * @var Html\Tag[]
@@ -245,6 +247,23 @@ class Standard implements Page\Standard
     public function getWithHeaders(): bool
     {
         return $this->with_headers;
+    }
+
+    public function withHamburger(Hamburger $hamburger): Page\Standard
+    {
+        $clone = clone $this;
+        $clone->hamburger = $hamburger;
+        return $clone;
+    }
+
+    public function hasHamburger(): bool
+    {
+        return $this->hamburger instanceof Hamburger;
+    }
+
+    public function getHamburger(): ?Hamburger
+    {
+        return $this->hamburger;
     }
 
     public function getIsUIDemo(): bool

@@ -47,6 +47,13 @@ class Factory implements IMainControls\Factory
         return new MainBar($this->signal_generator);
     }
 
+    public function hamburger(
+        IMainControls\MainBar $main_bar,
+        ?IMainControls\MetaBar $meta_bar = null
+    ): Hamburger {
+        return new Hamburger($this->signal_generator, $main_bar, $meta_bar);
+    }
+
     public function slate(): Slate\Factory
     {
         return $this->slate_factory;

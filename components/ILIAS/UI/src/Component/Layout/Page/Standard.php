@@ -28,6 +28,7 @@ use ILIAS\UI\Component\MainControls\MainBar;
 use ILIAS\UI\Component\MainControls\MetaBar;
 use ILIAS\UI\Component\MainControls\ModeInfo;
 use ILIAS\UI\Component\MainControls\Footer;
+use ILIAS\UI\Component\MainControls\Hamburger;
 use ILIAS\UI\Component\Toast\Container;
 use ILIAS\Data\Meta\Html;
 
@@ -43,6 +44,16 @@ interface Standard extends Page, JavaScriptBindable
     public function withMetabar(MetaBar $meta_bar): Standard;
 
     public function withMainbar(MainBar $main_bar): Standard;
+
+    /**
+     * Use a Hamburger as navigation on small screens. It replaces the
+     * Main Bar and the Meta Bar on small screens.
+     */
+    public function withHamburger(Hamburger $hamburger): Standard;
+
+    public function hasHamburger(): bool;
+
+    public function getHamburger(): ?Hamburger;
 
     public function withLogo(Image $logo): Standard;
 

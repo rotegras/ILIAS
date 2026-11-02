@@ -6960,6 +6960,336 @@ a[aria-disabled].il-link.link-bulky:hover {
     width: 63px;
   }
 }
+.il-hamburger {
+  display: none;
+}
+
+@media only screen and (max-width: 991px) {
+  .il-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    height: 45px;
+    width: 45px;
+  }
+  .il-hamburger-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: #737373;
+    cursor: pointer;
+  }
+  .il-hamburger-toggle .glyph {
+    color: inherit;
+    font-size: 1.5rem;
+  }
+  .il-hamburger-toggle .glyphicon {
+    transition: transform 0.3s ease;
+  }
+  .il-hamburger-toggle:active, .il-hamburger-toggle[aria-expanded=true] {
+    background-color: #f0f0f0;
+  }
+  .il-hamburger-toggle[aria-expanded=true] .glyphicon {
+    transform: rotate(90deg);
+  }
+  .il-hamburger-toggle:focus-visible:focus-visible {
+    outline: 3px solid #0078D7;
+    box-shadow: inset 0px 0px 0px 2px #FFFFFF, 0px 0px 0px 5px #FFFFFF;
+  }
+  .il-hamburger-panel {
+    position: fixed;
+    top: 45px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 60px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0s 0.3s;
+  }
+  .il-hamburger.engaged .il-hamburger-panel {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.3s ease;
+  }
+  .il-hamburger-entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .il-hamburger-metabar-entries {
+    border-top: 2px solid #dddddd;
+  }
+  .il-hamburger-entry {
+    margin: 0;
+    border-bottom: 1px solid #dddddd;
+  }
+  .il-hamburger-entry:last-child {
+    border-bottom: 0;
+  }
+  .il-hamburger-divider hr {
+    margin: 0;
+  }
+  .il-hamburger-item,
+  .il-hamburger-panel .btn-bulky,
+  .il-hamburger-panel .il-link.link-bulky {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-height: 45px;
+    margin: 0;
+    padding: 3px 15px;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: #161616;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    hyphens: auto;
+    cursor: pointer;
+  }
+  .il-hamburger-item .bulky-label,
+  .il-hamburger-panel .btn-bulky .bulky-label,
+  .il-hamburger-panel .il-link.link-bulky .bulky-label {
+    color: inherit;
+    font-weight: inherit;
+    margin: 0;
+  }
+  .il-hamburger-item .icon,
+  .il-hamburger-item .glyph,
+  .il-hamburger-item .il-avatar,
+  .il-hamburger-panel .btn-bulky .icon,
+  .il-hamburger-panel .btn-bulky .glyph,
+  .il-hamburger-panel .btn-bulky .il-avatar,
+  .il-hamburger-panel .il-link.link-bulky .icon,
+  .il-hamburger-panel .il-link.link-bulky .glyph,
+  .il-hamburger-panel .il-link.link-bulky .il-avatar {
+    flex-shrink: 0;
+  }
+  .il-hamburger-item .icon,
+  .il-hamburger-panel .btn-bulky .icon,
+  .il-hamburger-panel .il-link.link-bulky .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .il-hamburger-item .glyph,
+  .il-hamburger-item .glyph .glyphicon,
+  .il-hamburger-panel .btn-bulky .glyph,
+  .il-hamburger-panel .btn-bulky .glyph .glyphicon,
+  .il-hamburger-panel .il-link.link-bulky .glyph,
+  .il-hamburger-panel .il-link.link-bulky .glyph .glyphicon {
+    color: inherit;
+  }
+  .il-hamburger-item:hover, .il-hamburger-item.engaged,
+  .il-hamburger-panel .btn-bulky:hover,
+  .il-hamburger-panel .btn-bulky.engaged,
+  .il-hamburger-panel .il-link.link-bulky:hover,
+  .il-hamburger-panel .il-link.link-bulky.engaged {
+    background-color: #4c6586;
+    color: white;
+  }
+  .il-hamburger-item:hover .icon, .il-hamburger-item.engaged .icon,
+  .il-hamburger-panel .btn-bulky:hover .icon,
+  .il-hamburger-panel .btn-bulky.engaged .icon,
+  .il-hamburger-panel .il-link.link-bulky:hover .icon,
+  .il-hamburger-panel .il-link.link-bulky.engaged .icon {
+    filter: brightness(0) invert(1);
+  }
+  .il-hamburger-item:focus-visible:focus-visible,
+  .il-hamburger-panel .btn-bulky:focus-visible:focus-visible,
+  .il-hamburger-panel .il-link.link-bulky:focus-visible:focus-visible {
+    outline: 3px solid #0078D7;
+    box-shadow: inset 0px 0px 0px 2px #FFFFFF, 0px 0px 0px 5px #FFFFFF;
+  }
+  .il-hamburger-section-trigger {
+    padding-right: calc(15px * 2 + 0.75rem);
+  }
+  .il-hamburger-section-trigger::after {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    content: "\e606";
+    font-family: "il-icons";
+    font-size: 0.75rem;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+  }
+  .il-hamburger-section-trigger[aria-expanded=true]::after {
+    transform: translateY(-50%) rotate(90deg);
+  }
+  .il-hamburger-sub {
+    display: none;
+    border-top: 1px solid #dddddd;
+  }
+  .il-hamburger-section-trigger[aria-expanded=true] + .il-hamburger-sub {
+    display: block;
+  }
+  .il-hamburger-sub .il-hamburger-item,
+  .il-hamburger-sub .btn-bulky,
+  .il-hamburger-sub .il-link.link-bulky {
+    padding-left: 35px;
+  }
+  .il-hamburger-sub .il-hamburger-sub .il-hamburger-item,
+  .il-hamburger-sub .il-hamburger-sub .btn-bulky,
+  .il-hamburger-sub .il-hamburger-sub .il-link.link-bulky {
+    padding-left: 55px;
+  }
+  .il-hamburger-content {
+    padding: 6px 0;
+    overflow-x: auto;
+  }
+  .il-hamburger-content > ul,
+  .il-hamburger-content .il-maincontrols-slate-content > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .il-hamburger-content > ul > li,
+  .il-hamburger-content .il-maincontrols-slate-content > ul > li {
+    margin: 0;
+    border-bottom: 1px solid #dddddd;
+  }
+  .il-hamburger-content > ul > li:last-child,
+  .il-hamburger-content .il-maincontrols-slate-content > ul > li:last-child {
+    border-bottom: 0;
+  }
+  .il-hamburger-content .il-maincontrols-slate {
+    position: static;
+    width: auto;
+    max-width: none;
+    height: auto;
+    box-shadow: none;
+    background-color: transparent;
+    border-top: 1px solid #dddddd;
+  }
+  .il-hamburger-content .il-maincontrols-slate.disengaged {
+    display: none;
+  }
+  .il-hamburger-content .il-maincontrols-slate .btn-bulky,
+  .il-hamburger-content .il-maincontrols-slate .il-link.link-bulky {
+    padding-left: 55px;
+  }
+  .il-hamburger-content > :not(ul):not(.il-maincontrols-slate-content):not(.il-hamburger-loader) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .il-hamburger-loader {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 6px auto;
+    border: 3px solid #4c6586;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: il-hamburger-rotation 1s linear infinite;
+  }
+  @keyframes il-hamburger-rotation {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .il-hamburger-sub .il-notification-item {
+    margin: 0;
+    padding-left: 35px;
+    padding-right: 15px;
+  }
+}
+@media only screen and (max-width: 991px) and (prefers-reduced-motion: reduce) {
+  .il-hamburger-panel,
+  .il-hamburger.engaged .il-hamburger-panel,
+  .il-hamburger-toggle .glyphicon,
+  .il-hamburger-section-trigger::after {
+    transition: none;
+  }
+  .il-hamburger-loader {
+    animation-duration: 3s;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .il-hamburger-back {
+    display: none;
+    position: fixed;
+    top: 45px;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    height: 45px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #dddddd;
+  }
+  .il-hamburger-back-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    padding: 0 15px;
+    border: 0;
+    background: transparent;
+    color: #161616;
+    font-weight: 600;
+    text-align: left;
+  }
+  .il-hamburger-back-button:focus-visible:focus-visible {
+    outline: 3px solid #0078D7;
+    box-shadow: inset 0px 0px 0px 2px #FFFFFF, 0px 0px 0px 5px #FFFFFF;
+  }
+  .il-layout-page:has(.il-hamburger) .il-maincontrols-metabar > li > .btn,
+  .il-layout-page:has(.il-hamburger) .il-maincontrols-metabar > li > .il-link {
+    display: none !important;
+  }
+  .il-layout-page:has(.il-hamburger) .il-maincontrols-metabar .il-metabar-slates:has(> .il-maincontrols-slate.engaged) {
+    top: 90px;
+    max-height: calc(100vh - 90px);
+    height: calc(100vh - 90px);
+  }
+  .il-layout-page:has(.il-hamburger) .il-maincontrols-metabar .il-metabar-slates:has(> .il-maincontrols-slate.engaged) > .il-maincontrols-slate {
+    height: 100%;
+    max-height: none;
+    overflow-y: auto;
+  }
+  .il-layout-page:has(.il-hamburger) .nav.il-maincontrols .il-maincontrols-mainbar {
+    grid-template-rows: 0 0;
+  }
+  .il-layout-page:has(.il-hamburger) .nav.il-maincontrols .il-maincontrols-mainbar > .il-mainbar {
+    display: none;
+  }
+  .il-layout-page:has(.il-hamburger).with-mainbar-slates-engaged .nav.il-maincontrols {
+    height: calc(100% - 90px);
+  }
+  .il-layout-page:has(.il-hamburger).with-mainbar-slates-engaged .nav.il-maincontrols .il-maincontrols-mainbar {
+    grid-template-rows: 1fr 0;
+  }
+  .il-layout-page:has(.il-hamburger) .il-layout-page-content {
+    padding-bottom: 0;
+  }
+  .il-layout-page:has(.il-hamburger).with-mainbar-slates-engaged .il-hamburger-back, .il-layout-page:has(.il-hamburger):has(.il-metabar-slates > .il-maincontrols-slate.engaged) .il-hamburger-back {
+    display: block;
+  }
+  .il-layout-page:has(.il-hamburger).with-hamburger-engaged .il-hamburger-back {
+    display: none;
+  }
+  body:has(.il-layout-page.with-hamburger-engaged) {
+    overflow: hidden;
+  }
+}
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: "Open Sans", Verdana, Arial, Helvetica, sans-serif;
@@ -12072,6 +12402,11 @@ div.alert ul {
 .glyphicon-location:before {
   font-family: il-icons;
   content: "\e096";
+}
+
+.glyphicon-menu:before {
+  font-family: il-icons;
+  content: "\e601";
 }
 
 .il-avatar {

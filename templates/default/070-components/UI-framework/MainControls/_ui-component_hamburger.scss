@@ -1,0 +1,389 @@
+@use "../../../010-settings/" as *;
+@use "../../../050-layout/basics" as *;
+@use "../../../050-layout/standardpage/" as *;
+@use "../../../030-tools/tool_focus-outline" as f;
+
+//== Hamburger
+// The Hamburger replaces the Main Bar and Meta Bar on small screens.
+// Slates that cannot be rendered within the Hamburger stay in the Main Bar/Meta Bar
+// and are shown below a back-bar.
+
+$il-hamburger-back-height: $il-hamburger-item-min-height;
+
+.il-hamburger {
+	display: none;
+}
+
+@media only screen and (max-width: $il-grid-float-breakpoint-max) {
+	.il-hamburger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		height: $il-standard-page-small-header-height;
+		width: $il-standard-page-small-header-height;
+	}
+
+	// toggle
+	.il-hamburger-toggle {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background-color: $il-hamburger-toggle-bg-color;
+		color: $il-hamburger-toggle-color;
+		cursor: pointer;
+
+		.glyph {
+			color: inherit;
+			font-size: $il-hamburger-toggle-glyph-size;
+		}
+		.glyphicon {
+			transition: transform .3s ease;
+		}
+		&:active,
+		&[aria-expanded="true"] {
+			background-color: $il-hamburger-toggle-bg-color-active;
+		}
+		&[aria-expanded="true"] .glyphicon {
+			transform: rotate(90deg);
+		}
+		&:focus-visible {
+			@include f.il-focus-outline-only();
+		}
+	}
+
+	// panel
+	.il-hamburger-panel {
+		position: fixed;
+		top: $il-standard-page-small-header-height;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: $il-standard-page-zindex-header;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding-bottom: $il-standard-page-small-mainbar-height;
+		background-color: $il-hamburger-panel-bg-color;
+		box-shadow: $il-hamburger-panel-shadow;
+		transform: translateX(100%);
+		visibility: hidden;
+		transition: $il-hamburger-panel-transition, visibility 0s .3s;
+
+		.il-hamburger.engaged & {
+			transform: none;
+			visibility: visible;
+			transition: $il-hamburger-panel-transition;
+		}
+	}
+
+	.il-hamburger-entries {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.il-hamburger-metabar-entries {
+		border-top: 2px solid $il-hamburger-item-border-color;
+	}
+
+	.il-hamburger-entry {
+		margin: 0;
+		border-bottom: 1px solid $il-hamburger-item-border-color;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	.il-hamburger-divider hr {
+		margin: 0;
+	}
+
+	// entries: own items as well as Bulky Buttons/Links rendered inside the panel
+	.il-hamburger-item,
+	.il-hamburger-panel .btn-bulky,
+	.il-hamburger-panel .il-link.link-bulky {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: $il-padding-large-horizontal;
+		width: 100%;
+		min-height: $il-hamburger-item-min-height;
+		margin: 0;
+		padding: $il-padding-base-vertical $il-padding-xlarge-horizontal;
+		border: 0;
+		border-radius: 0;
+		background-color: $il-hamburger-item-bg-color;
+		color: $il-hamburger-item-color;
+		font-weight: $il-hamburger-item-font-weight;
+		text-align: left;
+		text-decoration: none;
+		hyphens: auto;
+		cursor: pointer;
+
+		.bulky-label {
+			color: inherit;
+			font-weight: inherit;
+			margin: 0;
+		}
+
+		.icon,
+		.glyph,
+		.il-avatar {
+			flex-shrink: 0;
+			@if $il-hamburger-show-symbols == false {
+				display: none;
+			}
+		}
+
+		.icon {
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+
+		.glyph,
+		.glyph .glyphicon {
+			color: inherit;
+		}
+
+		&:hover,
+		&.engaged {
+			background-color: $il-hamburger-item-bg-color-hover;
+			color: $il-hamburger-item-color-hover;
+
+			.icon {
+				filter: brightness(0) invert(1);
+			}
+		}
+
+		&:focus-visible {
+			@include f.il-focus-outline-only();
+		}
+	}
+
+	// chevrons for sections
+	.il-hamburger-section-trigger {
+		padding-right: calc(#{$il-padding-xlarge-horizontal} * 2 + 0.75rem);
+
+		&::after {
+			position: absolute;
+			top: 50%;
+			right: $il-padding-xlarge-horizontal;
+			content: "\e606";
+			font-family: "il-icons";
+			font-size: .75rem;
+			transform: translateY(-50%);
+			transition: transform .3s ease;
+		}
+	}
+
+	.il-hamburger-section-trigger[aria-expanded="true"]::after {
+		transform: translateY(-50%) rotate(90deg);
+	}
+
+	// sections
+	.il-hamburger-sub {
+		display: none;
+		border-top: 1px solid $il-hamburger-item-border-color;
+
+		.il-hamburger-section-trigger[aria-expanded="true"] + & {
+			display: block;
+		}
+
+		.il-hamburger-item,
+		.btn-bulky,
+		.il-link.link-bulky {
+			padding-left: $il-padding-xlarge-horizontal + $il-hamburger-item-indent;
+		}
+
+		.il-hamburger-sub {
+			.il-hamburger-item,
+			.btn-bulky,
+			.il-link.link-bulky {
+				padding-left: $il-padding-xlarge-horizontal + 2 * $il-hamburger-item-indent;
+			}
+		}
+	}
+
+	// contents of Slates rendered within a section (Legacy, Drilldown, asynchronously loaded Slates)
+	.il-hamburger-content {
+		padding: $il-padding-large-vertical 0;
+		overflow-x: auto;
+
+		// asynchronously loaded slate contents
+		> ul,
+		.il-maincontrols-slate-content > ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			> li {
+				margin: 0;
+				border-bottom: 1px solid $il-hamburger-item-border-color;
+
+				&:last-child {
+					border-bottom: 0;
+				}
+			}
+		}
+
+		// nested slates within asynchronously loaded contents
+		.il-maincontrols-slate {
+			position: static;
+			width: auto;
+			max-width: none;
+			height: auto;
+			box-shadow: none;
+			background-color: transparent;
+			border-top: 1px solid $il-hamburger-item-border-color;
+
+			&.disengaged {
+				display: none;
+			}
+
+			.btn-bulky,
+			.il-link.link-bulky {
+				padding-left: $il-padding-xlarge-horizontal + 2 * $il-hamburger-item-indent;
+			}
+		}
+
+		// legacy contents (e.g. forms, trees)
+		> :not(ul):not(.il-maincontrols-slate-content):not(.il-hamburger-loader) {
+			padding-left: $il-padding-xlarge-horizontal;
+			padding-right: $il-padding-xlarge-horizontal;
+		}
+	}
+
+	.il-hamburger-loader {
+		display: block;
+		width: 24px;
+		height: 24px;
+		margin: $il-padding-large-vertical auto;
+		border: 3px solid $il-hamburger-item-bg-color-hover;
+		border-bottom-color: transparent;
+		border-radius: 50%;
+		animation: il-hamburger-rotation 1s linear infinite;
+	}
+
+	@keyframes il-hamburger-rotation {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	// notification items
+	.il-hamburger-sub .il-notification-item {
+		margin: 0;
+		padding-left: $il-padding-xlarge-horizontal + $il-hamburger-item-indent;
+		padding-right: $il-padding-xlarge-horizontal;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.il-hamburger-panel,
+		.il-hamburger.engaged .il-hamburger-panel,
+		.il-hamburger-toggle .glyphicon,
+		.il-hamburger-section-trigger::after {
+			transition: none;
+		}
+		.il-hamburger-loader {
+			animation-duration: 3s;
+		}
+	}
+
+	// back-bar, shown above slates opened from the Hamburger
+	.il-hamburger-back {
+		display: none;
+		position: fixed;
+		top: $il-standard-page-small-header-height;
+		right: 0;
+		left: 0;
+		z-index: $il-standard-page-zindex-header;
+		height: $il-hamburger-back-height;
+		background-color: $il-hamburger-back-bg-color;
+		border-bottom: 1px solid $il-hamburger-item-border-color;
+	}
+
+	.il-hamburger-back-button {
+		display: flex;
+		align-items: center;
+		gap: $il-padding-large-horizontal;
+		width: 100%;
+		height: 100%;
+		padding: 0 $il-padding-xlarge-horizontal;
+		border: 0;
+		background: transparent;
+		color: $il-hamburger-item-color;
+		font-weight: $il-hamburger-item-font-weight;
+		text-align: left;
+
+		&:focus-visible {
+			@include f.il-focus-outline-only();
+		}
+	}
+
+	// replace Main Bar and Meta Bar on small screens
+	// skins overriding tpl.standardpage.html without {HAMBURGER} keep the default behaviour
+	.il-layout-page:has(.il-hamburger) {
+		// Meta Bar: hide the entries, keep the slates
+		.il-maincontrols-metabar > li > .btn,
+		.il-maincontrols-metabar > li > .il-link {
+			display: none !important;
+		}
+
+		.il-maincontrols-metabar .il-metabar-slates:has(> .il-maincontrols-slate.engaged) {
+			top: $il-standard-page-small-header-height + $il-hamburger-back-height;
+			max-height: calc(100vh - #{$il-standard-page-small-header-height + $il-hamburger-back-height});
+			height: calc(100vh - #{$il-standard-page-small-header-height + $il-hamburger-back-height});
+
+			> .il-maincontrols-slate {
+				height: 100%;
+				max-height: none;
+				overflow-y: auto;
+			}
+		}
+
+		// Main Bar: hide the bar, keep the slates
+		.nav.il-maincontrols .il-maincontrols-mainbar {
+			grid-template-rows: 0 0;
+
+			> .il-mainbar {
+				display: none;
+			}
+		}
+
+		&.with-mainbar-slates-engaged .nav.il-maincontrols {
+			height: calc(100% - #{$il-standard-page-small-header-height + $il-hamburger-back-height});
+
+			.il-maincontrols-mainbar {
+				grid-template-rows: 1fr 0;
+			}
+		}
+
+		.il-layout-page-content {
+			padding-bottom: 0;
+		}
+
+		// show the back-bar if a slate of the Main Bar or Meta Bar is engaged
+		&.with-mainbar-slates-engaged,
+		&:has(.il-metabar-slates > .il-maincontrols-slate.engaged) {
+			.il-hamburger-back {
+				display: block;
+			}
+		}
+
+		&.with-hamburger-engaged .il-hamburger-back {
+			display: none;
+		}
+	}
+
+	body:has(.il-layout-page.with-hamburger-engaged) {
+		overflow: hidden;
+	}
+}

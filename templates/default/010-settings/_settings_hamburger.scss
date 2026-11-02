@@ -1,0 +1,25 @@
+@use "./settings_color-palette" as s;
+@use "./settings_borders" as b;
+@use "./settings_typography" as t;
+
+//== Hamburger (navigation on small screens)
+$il-hamburger-toggle-color: s.$il-neutral-light-color !default;
+$il-hamburger-toggle-bg-color: transparent !default;
+$il-hamburger-toggle-bg-color-active: s.$il-main-darker-bg !default;
+$il-hamburger-toggle-glyph-size: 1.5rem !default;
+
+$il-hamburger-panel-bg-color: s.$il-main-bg !default;
+$il-hamburger-panel-shadow: 0 2px 4px rgba(0, 0, 0, .1) !default;
+$il-hamburger-panel-transition: transform .3s ease !default;
+
+$il-hamburger-item-color: s.$il-text-color !default;
+$il-hamburger-item-bg-color: transparent !default;
+$il-hamburger-item-color-hover: s.$il-text-color-invert !default;
+$il-hamburger-item-bg-color-hover: s.$il-main-color !default;
+$il-hamburger-item-border-color: b.$il-main-border-color !default;
+$il-hamburger-item-font-weight: t.$il-font-weight-bold !default;
+$il-hamburger-item-min-height: 45px !default;
+$il-hamburger-item-indent: 20px !default;
+$il-hamburger-show-symbols: true !default;
+
+$il-hamburger-back-bg-color: s.$il-main-dark-bg !default;

@@ -348,4 +348,9 @@ class Factory implements G\Factory
     {
         return new Glyph(G\Glyph::LOCATION, "location");
     }
+
+    public function menu(): G\Glyph
+    {
+        return new Glyph(G\Glyph::MENU, "menu");
+    }
 }

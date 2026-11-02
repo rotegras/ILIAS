@@ -90,6 +90,7 @@ interface Glyph extends Symbol
     public const OWNER = "owner";
     public const DATE = "date";
     public const LOCATION = "location";
+    public const MENU = "menu";
 
     /**
      * Override the default label text with a more specific one

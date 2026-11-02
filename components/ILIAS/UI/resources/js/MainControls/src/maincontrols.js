@@ -17,6 +17,7 @@ import il from 'il';
 import $ from 'jquery';
 import MetabarFactory from './metabar.factory.js';
 import Slate from './slate.class.js';
+import HamburgerFactory from './hamburger.factory.js';
 import replaceContent from '../../Core/src/core.replaceContent.js';
 import { counterFactory } from '../../Counter/src/counter.main.js';
 
@@ -29,6 +30,13 @@ il.UI.maincontrols.metabar = new MetabarFactory(
   counterFactory($),
   () => il.UI.maincontrols.mainbar.disengageAll(),
   (slate) => il.UI.maincontrols.slate.disengage(slate),
+);
+il.UI.maincontrols.hamburger = new HamburgerFactory(
+  $,
+  () => il.UI.page.isSmallScreen(),
+  () => il.UI.maincontrols.mainbar ?? null,
+  () => il.UI.maincontrols.metabar ?? null,
+  replaceContent($),
 );
 il.UI.maincontrols.slate = new Slate(
   $,

@@ -1,0 +1,16 @@
+<div class="il-hamburger" id="{ID}">
+	<button type="button" class="il-hamburger-toggle" aria-expanded="false" aria-controls="{ID}_panel" aria-label="{LABEL_OPEN}" data-label-open="{LABEL_OPEN}" data-label-close="{LABEL_CLOSE}">{TOGGLE_SYMBOL}</button>
+	<nav class="il-hamburger-panel" id="{ID}_panel" aria-label="{ARIA_LABEL}">
+		<ul class="il-hamburger-entries il-hamburger-mainbar-entries">
+			{MAINBAR_ENTRIES}
+		</ul>
+		<!-- BEGIN metabar -->
+		<ul class="il-hamburger-entries il-hamburger-metabar-entries">
+			{METABAR_ENTRIES}
+		</ul>
+		<!-- END metabar -->
+	</nav>
+	<div class="il-hamburger-back">
+		<button type="button" class="il-hamburger-back-button">{BACK_SYMBOL}<span class="il-hamburger-label">{BACK_LABEL}</span></button>
+	</div>
+</div>

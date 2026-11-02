@@ -82,14 +82,26 @@ class NotificationCenterRenderer extends AbstractMetaBarItemRenderer implements 
      */
     protected function attachJSShowEvent(Combined $center): Combined
     {
+        global $DIC;
         $toggle_signal = $center->getToggleSignal();
+        // the in-view signal is also triggered if the center is shown elsewhere, e.g. in the Hamburger
+        $in_view_signal = $DIC['ui.signal_generator']->create();
+        $center = $center->appendOnInView($in_view_signal);
         $url = ClientNotifications::NOTIFY_ENDPOINT . "?" . $this->buildShowQuery();
 
         $center = $center->withAdditionalOnLoadCode(
             fn($id): string => "
-                $(document).on('$toggle_signal', function(event, signalData) {
-                    $.ajax({url: '$url'});
-                });"
+                (function() {
+                    let last_opened = 0;
+                    const opened = function() {
+                        if (Date.now() - last_opened > 1000) {
+                            last_opened = Date.now();
+                            $.ajax({url: '$url'});
+                        }
+                    };
+                    $(document).on('$toggle_signal', opened);
+                    $(document).on('$in_view_signal', opened);
+                })();"
         );
 
         return $center;

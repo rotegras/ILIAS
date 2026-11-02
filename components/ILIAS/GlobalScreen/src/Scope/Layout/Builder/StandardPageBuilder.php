@@ -86,6 +86,12 @@ class StandardPageBuilder implements PageBuilder
             $standard = $standard->withAdditionalMetaDatum($og_meta_data);
         }
 
+        if (null !== $main_bar) {
+            $standard = $standard->withHamburger(
+                $this->ui->factory()->mainControls()->hamburger($main_bar, $meta_bar)
+            );
+        }
+
         return $standard->withSystemInfos($parts->getSystemInfos())
                         ->withTextDirection($this->meta->getTextDirection() ?? Standard::LTR);
     }

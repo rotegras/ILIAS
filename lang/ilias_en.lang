@@ -4346,6 +4346,10 @@ common#:#grpr_edit#:#Edit Group Link
 common#:#grpr_edit_info#:#Please choose one group for creating a new group link.
 common#:#grpr_new#:#Create Group Link
 common#:#grpr_settings#:#Group Link Settings
+common#:#hamburger_aria_label#:#Navigation
+common#:#hamburger_back#:#Back to Menu
+common#:#hamburger_close#:#Close Menu
+common#:#hamburger_open#:#Open Menu
 common#:#header_action#:#Insert Heading - Click to insert a heading.
 common#:#header_searchable#:#Searchable
 common#:#header_title#:#Header Title

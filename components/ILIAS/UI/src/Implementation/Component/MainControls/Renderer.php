@@ -22,6 +22,14 @@ namespace ILIAS\UI\Implementation\Component\MainControls;
 
 use ILIAS\UI\Component;
 use ILIAS\UI\Component\MainControls\Footer;
+use ILIAS\UI\Component\MainControls\Hamburger;
+use ILIAS\UI\Component\MainControls\Slate\Combined as CombinedSlate;
+use ILIAS\UI\Component\MainControls\Slate\Notification as NotificationSlate;
+use ILIAS\UI\Component\ReplaceSignal;
+use ILIAS\UI\Component\Link\Bulky as BulkyLink;
+use ILIAS\UI\Component\Divider\Horizontal as HorizontalDivider;
+use ILIAS\UI\Component\Symbol\Glyph\Glyph;
+use ILIAS\UI\Component\Counter\Counter;
 use ILIAS\UI\Component\MainControls\MainBar;
 use ILIAS\UI\Component\MainControls\MetaBar;
 use ILIAS\UI\Component\MainControls\Slate\Legacy as LegacySlate;
@@ -59,6 +67,9 @@ class Renderer extends AbstractComponentRenderer
         }
         if ($component instanceof MetaBar) {
             return $this->renderMetabar($component, $default_renderer);
+        }
+        if ($component instanceof Hamburger) {
+            return $this->renderHamburger($component, $default_renderer);
         }
         if ($component instanceof Footer) {
             return $this->renderFooter($component, $default_renderer);
@@ -293,6 +304,210 @@ class Renderer extends AbstractComponentRenderer
         $id = $this->bindJavaScript($component);
         $tpl->setVariable('ID', $id);
         return $tpl->get();
+    }
+
+    protected function renderHamburger(Hamburger $component, RendererInterface $default_renderer): string
+    {
+        $f = $this->getUIFactory();
+        $tpl = $this->getTemplate("tpl.hamburger.html", true, true);
+
+        $main_bar = $component->getMainBar();
+        $mainbar_entries = '';
+        foreach ($main_bar->getEntries() as $entry) {
+            $mainbar_entries .= $this->renderHamburgerEntry($entry, $default_renderer);
+        }
+        $hidden_tools = $main_bar->getInitiallyHiddenToolIds();
+        foreach ($main_bar->getToolEntries() as $key => $tool) {
+            if (in_array($key, $hidden_tools, true)) {
+                continue;
+            }
+            $mainbar_entries .= $this->renderHamburgerEntry($tool, $default_renderer, null, 'il-hamburger-tool');
+        }
+        $tpl->setVariable('MAINBAR_ENTRIES', $mainbar_entries);
+
+        $novelty = 0;
+        $status = 0;
+        $meta_bar = $component->getMetaBar();
+        if ($meta_bar !== null && $meta_bar->getEntries() !== []) {
+            $metabar_entries = '';
+            $index = 0;
+            foreach ($meta_bar->getEntries() as $entry) {
+                [$entry_novelty, $entry_status] = $this->sumUpCounters($entry);
+                $novelty += $entry_novelty;
+                $status += $entry_status;
+                $metabar_entries .= $this->renderHamburgerEntry($entry, $default_renderer, $index);
+                $index++;
+            }
+            $tpl->setCurrentBlock('metabar');
+            $tpl->setVariable('METABAR_ENTRIES', $metabar_entries);
+            $tpl->parseCurrentBlock();
+        }
+
+        $toggle_symbol = $f->symbol()->glyph()->menu()
+            ->withLabel('')
+            ->withCounter($f->counter()->novelty($novelty))
+            ->withCounter($f->counter()->status($status));
+        $tpl->setVariable('TOGGLE_SYMBOL', $default_renderer->render($toggle_symbol));
+        $tpl->setVariable('LABEL_OPEN', $this->txt('hamburger_open'));
+        $tpl->setVariable('LABEL_CLOSE', $this->txt('hamburger_close'));
+        $tpl->setVariable('ARIA_LABEL', $this->txt('hamburger_aria_label'));
+
+        $back_symbol = $f->symbol()->glyph()->back()->withLabel('');
+        $tpl->setVariable('BACK_SYMBOL', $default_renderer->render($back_symbol));
+        $tpl->setVariable('BACK_LABEL', $this->txt('hamburger_back'));
+
+        $toggle_signal = $component->getToggleSignal();
+        $close_signal = $component->getCloseSignal();
+        $component = $component->withAdditionalOnLoadCode(
+            fn($id) => "il.UI.maincontrols.hamburger.init('$id', '$toggle_signal', '$close_signal');"
+        );
+        $id = $this->bindJavaScript($component);
+        $tpl->setVariable('ID', $id);
+
+        return $tpl->get();
+    }
+
+    /**
+     * Render an entry of the Main Bar or Meta Bar as an entry of the Hamburger:
+     * Slates become (expandable) sections, everything else is rendered as it is.
+     *
+     * @param int|null $metabar_index position of the entry in the Meta Bar, used to mirror its counters
+     */
+    protected function renderHamburgerEntry(
+        Component\Component $entry,
+        RendererInterface $default_renderer,
+        ?int $metabar_index = null,
+        ?string $class = null
+    ): string {
+        if ($entry instanceof Slate) {
+            return $this->renderHamburgerSection($entry, $default_renderer, $metabar_index, $class);
+        }
+        return $this->renderHamburgerPlainEntry($entry, $default_renderer);
+    }
+
+    protected function renderHamburgerPlainEntry(
+        Component\Component $entry,
+        RendererInterface $default_renderer
+    ): string {
+        $tpl = $this->getTemplate("tpl.hamburger_entry.html", true, true);
+        $tpl->setVariable('CLASS', $entry instanceof HorizontalDivider ? 'il-hamburger-divider' : 'il-hamburger-plain');
+        $tpl->setCurrentBlock('plain');
+        $tpl->setVariable('CONTENT', $default_renderer->render($entry));
+        $tpl->parseCurrentBlock();
+        return $tpl->get();
+    }
+
+    /**
+     * Render a Slate as section of the Hamburger. The contents of the Slate are
+     * rendered within the Hamburger:
+     * - asynchronously loaded Slates are loaded into the section when it is expanded,
+     * - entries of Combined Slates are rendered as entries (nested Slates as nested sections),
+     * - Notification Slates list their Notification Items,
+     * - the contents of all other Slates (Legacy, Drilldown) are rendered as they are.
+     */
+    protected function renderHamburgerSection(
+        Slate $slate,
+        RendererInterface $default_renderer,
+        ?int $metabar_index = null,
+        ?string $class = null
+    ): string {
+        [$async_url, $in_view_signals] = $this->getHamburgerInViewActions($slate);
+
+        $tpl = $this->getTemplate("tpl.hamburger_entry.html", true, true);
+        $tpl->setVariable('CLASS', trim('il-hamburger-section ' . ($class ?? '')));
+        $tpl->setCurrentBlock('section');
+
+        if ($async_url !== null) {
+            $tpl->setCurrentBlock('sub_async');
+            $tpl->setVariable('ASYNC_URL', htmlspecialchars($async_url, ENT_QUOTES));
+            $tpl->parseCurrentBlock();
+        } elseif ($slate instanceof CombinedSlate || $slate instanceof NotificationSlate) {
+            $entries = '';
+            foreach ($slate->getContents() as $content) {
+                $entries .= $content instanceof Slate
+                    ? $this->renderHamburgerSection($content, $default_renderer)
+                    : $this->renderHamburgerPlainEntry($content, $default_renderer);
+            }
+            if ($entries === '') {
+                return '';
+            }
+            $tpl->setCurrentBlock('sub_list');
+            $tpl->setVariable('ENTRIES', $entries);
+            $tpl->parseCurrentBlock();
+        } else {
+            $tpl->setCurrentBlock('sub_content');
+            $tpl->setVariable('CONTENT', $default_renderer->render($slate->getContents()));
+            $tpl->parseCurrentBlock();
+        }
+
+        if ($in_view_signals !== []) {
+            $tpl->setCurrentBlock('in_view');
+            $tpl->setVariable('IN_VIEW_SIGNALS', htmlspecialchars(json_encode($in_view_signals), ENT_QUOTES));
+            $tpl->parseCurrentBlock();
+        }
+        if ($metabar_index !== null) {
+            $tpl->setCurrentBlock('metabar_index');
+            $tpl->setVariable('METABAR_INDEX', (string) $metabar_index);
+            $tpl->parseCurrentBlock();
+        }
+
+        $tpl->setCurrentBlock('section');
+        $tpl->setVariable('SUB_ID', $this->createId());
+        $symbol = $slate instanceof NotificationSlate ? '' : $default_renderer->render($slate->getSymbol());
+        $tpl->setVariable('SYMBOL', $symbol);
+        $tpl->setVariable('LABEL', $slate->getName());
+        $tpl->parseCurrentBlock();
+        return $tpl->get();
+    }
+
+    /**
+     * Signals that are triggered when a Slate comes into view: Replace Signals with
+     * an URL load the contents of the Slate asynchronously - the Hamburger loads this
+     * URL itself; all other signals are triggered by the Hamburger when the section is expanded.
+     *
+     * @return array{0: ?string, 1: string[]} [async url, ids of other signals]
+     */
+    protected function getHamburgerInViewActions(Slate $slate): array
+    {
+        if (!$slate instanceof ISlate) {
+            return [null, []];
+        }
+        $async_url = null;
+        $signals = [];
+        foreach ($slate->getTriggeredSignalsFor('in_view') as $signal) {
+            $options = $signal->getOptions();
+            if ($signal instanceof ReplaceSignal && isset($options['url'])) {
+                $async_url = (string) $options['url'];
+                continue;
+            }
+            $signals[] = $signal->getId();
+        }
+        return [$async_url, $signals];
+    }
+
+    /**
+     * @return int[] [novelty, status]
+     */
+    protected function sumUpCounters(Component\Component $entry): array
+    {
+        $symbol = null;
+        if ($entry instanceof Slate) {
+            $symbol = $entry->getSymbol();
+        } elseif ($entry instanceof IBulky || $entry instanceof BulkyLink) {
+            $symbol = $entry->getSymbol();
+        }
+        $novelty = 0;
+        $status = 0;
+        if ($symbol instanceof Glyph) {
+            foreach ($symbol->getCounters() as $counter) {
+                if ($counter->getType() === Counter::NOVELTY) {
+                    $novelty += $counter->getNumber();
+                } elseif ($counter->getType() === Counter::STATUS) {
+                    $status += $counter->getNumber();
+                }
+            }
+        }
+        return [$novelty, $status];
     }
 
     protected function renderModeInfo(ModeInfo $component, RendererInterface $default_renderer): string

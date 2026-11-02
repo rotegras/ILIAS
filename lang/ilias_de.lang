@@ -4345,6 +4345,10 @@ common#:#grpr_edit#:#Gruppenlink bearbeiten
 common#:#grpr_edit_info#:#Bitte wählen Sie die Gruppe aus, für die Sie einen Link erstellen möchten.
 common#:#grpr_new#:#Neuen Gruppenlink anlegen
 common#:#grpr_settings#:#Einstellungen des Gruppenlinks
+common#:#hamburger_aria_label#:#Navigation
+common#:#hamburger_back#:#Zurück zum Menü
+common#:#hamburger_close#:#Menü schließen
+common#:#hamburger_open#:#Menü öffnen
 common#:#header_action#:#Überschrift einfügen - Klicken Sie um eine Überschrift einzufügen
 common#:#header_searchable#:#Durchsuchbar
 common#:#header_title#:#Installationsüberschrift

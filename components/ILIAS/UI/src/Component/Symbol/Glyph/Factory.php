@@ -1831,4 +1831,32 @@ interface Factory
      * @return  \ILIAS\UI\Component\Symbol\Glyph\Glyph
      */
     public function location(): Glyph;
+
+    /**
+     * ---
+     * description:
+     *   purpose: >
+     *       The Menu Glyph indicates that a navigation menu can be opened.
+     *       It is commonly known as "hamburger" icon.
+     *   composition: >
+     *       The Menu Glyph uses the CSS class glyphicon-menu.
+     *       The glyph's design is rendered using the il-icons font.
+     *   effect: >
+     *       When placed in a Button, clicking opens or closes a navigation menu.
+     *   rivals:
+     *       More Glyph: >
+     *          The More Glyph reveals further actions or entries of the current context,
+     *          whereas the Menu Glyph opens the (main) navigation.
+     *
+     * context:
+     *    - The Menu Glyph is used to toggle the Hamburger in the Standard Page on small screens.
+     *
+     * rules:
+     *   accessibility:
+     *       1: >
+     *          The aria-label MUST be 'Menu'.
+     * ---
+     * @return  \ILIAS\UI\Component\Symbol\Glyph\Glyph
+     */
+    public function menu(): Glyph;
 }
