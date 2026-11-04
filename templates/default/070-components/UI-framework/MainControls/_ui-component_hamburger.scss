@@ -255,10 +255,10 @@ $il-hamburger-back-height: $il-hamburger-item-min-height;
 		}
 
 		// legacy contents (e.g. forms, trees)
-		> :not(ul):not(.il-maincontrols-slate-content):not(.il-hamburger-loader) {
-			padding-left: $il-padding-xlarge-horizontal;
-			padding-right: $il-padding-xlarge-horizontal;
-		}
+		// > :not(ul):not(.il-maincontrols-slate-content):not(.il-hamburger-loader) {
+		// 	padding-left: $il-padding-xlarge-horizontal;
+		// 	padding-right: $il-padding-xlarge-horizontal;
+		// }
 	}
 
 	.il-hamburger-loader {

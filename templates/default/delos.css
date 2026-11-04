@@ -7186,10 +7186,6 @@ a[aria-disabled].il-link.link-bulky:hover {
   .il-hamburger-content .il-maincontrols-slate .il-link.link-bulky {
     padding-left: 55px;
   }
-  .il-hamburger-content > :not(ul):not(.il-maincontrols-slate-content):not(.il-hamburger-loader) {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
   .il-hamburger-loader {
     display: block;
     width: 24px;
